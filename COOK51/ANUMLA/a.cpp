@@ -1,0 +1,114 @@
+#include<cstdio>
+#include<ctime>
+#include<cstdlib>
+#include<cstring>
+#include<climits>
+#include<cctype>
+#include<cmath>
+#include<algorithm>
+#include<vector>
+#include<map>
+#include<set>
+#include<string>
+#include<iostream>
+#include<iomanip>
+#include<stdint.h>
+#include<unistd.h>
+typedef long long ll;
+using namespace std;
+#define si(x) scanf("%d", &(x))
+#define sll(x) scanf("%lld", &(x))
+#define ss(x) scanf("%s", x)
+#define sc(x) scanf("%c", &(x))
+#define sline(x) scanf("%[^\n]", x)
+ 
+class FastInput {
+	public:
+		FastInput() {
+			m_dataOffset = 0;
+			m_dataSize = 0;
+			m_v = 0x80000000;
+		}
+		uint32_t ReadNext() {
+			if (m_dataOffset == m_dataSize) {
+				int r = read(0, m_buffer, sizeof(m_buffer));
+				if (r <= 0) return m_v;
+				m_dataOffset = 0;
+				m_dataSize = 0;
+				int i = 0;
+				if (m_buffer[0] < '0') {
+					if (m_v != 0x80000000) {
+						m_data[m_dataSize++] = m_v;
+						m_v = 0x80000000;
+					}
+					for (; (i < r) && (m_buffer[i] < '0'); ++i);
+				}
+				for (; i < r;) {
+					if (m_buffer[i] >= '0') {
+						m_v = m_v * 10 + m_buffer[i] - 48;
+						++i;
+					} else {
+						m_data[m_dataSize++] = m_v;
+						m_v = 0x80000000;
+						for (i = i + 1; (i < r) && (m_buffer[i] < '0'); ++i);
+					}
+				}
+			}
+			return m_data[m_dataOffset++];
+		}
+	public:
+		uint8_t m_buffer[32768];
+		uint32_t m_data[16384];
+		size_t m_dataOffset, m_dataSize;
+		uint32_t m_v;
+};
+map<int, int> sums;
+multiset<int> a;
+int T, N, ans;
+FastInput fi;
+int main()
+{
+	T = fi.ReadNext();
+	while(T--)
+	{
+		sums.clear();
+		a.clear();
+		N = fi.ReadNext();
+		for(int i = 0; i < (1<<N); ++i)
+			sums[fi.ReadNext()]++;
+		sums.erase(0);
+		/*printf("map:");
+		for(map<int, int>::iterator it = sums.begin(); it != sums.end(); it++)
+			printf("%d(%d) ", it->first, it->second);
+		printf("\n");*/
+		while(!sums.empty())
+		{
+			multiset<int>::iterator it;
+			int sum1 = sums.begin()->first;
+			for(int i = 0; i < (1 << a.size()); i++)
+			{
+				int isum = 0, j;
+				for(it = a.begin(), j = 0; it != a.end(); it++, j++)
+					if(i & (1 << j))
+						isum += *it;
+				sums[isum + sum1]--;
+				if(sums[isum + sum1] == 0)
+					sums.erase(isum + sum1);
+			}
+			a.insert(sum1);
+			/*printf("a:");
+			for(multiset<int>::iterator it = a.begin(); it != a.end(); it++)
+				printf("%d ", *it);
+			printf("\t");
+			printf("map:");
+			for(map<int, int>::iterator it = sums.begin(); it != sums.end(); it++)
+				printf("%d(%d) ", it->first, it->second);
+			printf("\n");*/
+		}
+		
+		for(multiset<int>::iterator it = a.begin(); it != a.end(); it++)
+			printf("%d ", *it);
+		printf("\n");
+	}
+	return 0;
+} 
