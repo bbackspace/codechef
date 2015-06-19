@@ -4,7 +4,6 @@
 #include<cstring>
 #include<climits>
 #include<cctype>
-#include<cassert>
 #include<algorithm>
 #include<vector>
 #include<map>
@@ -58,7 +57,7 @@ class FastInput {
 		size_t m_dataOffset, m_dataSize;
 		uint32_t m_v;
 };
-int a[100000];
+int c[51], h[51];
 int T, N, ans;
 FastInput fi;
 int main()
@@ -67,10 +66,38 @@ int main()
 	while(T--)
 	{
 		N = fi.ReadNext();
+		int sum = 0, maxc = -1;
 		for(int i = 0; i < N; ++i)
-			a[i] = fi.ReadNext();
-		
-		printf("%d\n", ans);
+		{
+			c[i] = fi.ReadNext();
+			sum += c[i];
+			maxc = max(maxc, c[i]);
+		}
+		if(sum == N && maxc < N)
+		{
+			int k = 0;
+			for(int i = 0; i < N; i++)
+			{
+				while(c[i]--)
+				{
+					h[k++] = i + 1;
+				}
+			}
+			for(int i = 0; i < N; i++)
+			{
+				if(h[i] == i + 1)
+				{
+					int k;
+					for(k = i + 1; h[k % N] == i + 1; k++);
+					swap(h[i], h[k % N]);
+				}
+			}
+			for(int i = 0; i < N; i++)
+				printf("%d ", h[i]);
+			printf("\n");
+		}
+		else
+			printf("-1\n");
 	}
 	return 0;
 }

@@ -4,7 +4,6 @@
 #include<cstring>
 #include<climits>
 #include<cctype>
-#include<cassert>
 #include<algorithm>
 #include<vector>
 #include<map>
@@ -59,7 +58,8 @@ class FastInput {
 		uint32_t m_v;
 };
 int a[100000];
-int T, N, ans;
+int T, N;
+ll ans;
 FastInput fi;
 int main()
 {
@@ -69,7 +69,17 @@ int main()
 		N = fi.ReadNext();
 		for(int i = 0; i < N; ++i)
 			a[i] = fi.ReadNext();
-		
+		ll sum = 0;
+		int minT = 1000000;
+		for(int i = 0; i < N; i++)
+		{
+			minT = min(minT, a[i]);
+			sum += a[i];
+		}
+		if(minT < 2)
+			ans = -1;
+		else
+			ans = sum - (minT - 2);
 		printf("%d\n", ans);
 	}
 	return 0;

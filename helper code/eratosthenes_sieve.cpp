@@ -7,7 +7,7 @@ void sieve()
 {
 	bool isCom[PMAX + 10];
 	memset(isCom, 0, sizeof(isCom));
-	for(ll i = 2; i * i <= (ll)PMAX; i++)
+	for(ll i = 2; i <= (ll)PMAX; i++)
 	{
 		if(!isCom[i])
 		{	

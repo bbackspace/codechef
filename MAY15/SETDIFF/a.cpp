@@ -4,7 +4,6 @@
 #include<cstring>
 #include<climits>
 #include<cctype>
-#include<cassert>
 #include<algorithm>
 #include<vector>
 #include<map>
@@ -17,7 +16,7 @@ using namespace std;
 #define ss(x) scanf("%s", x)
 #define sc(x) scanf("%c", &(x))
 #define sline(x) scanf("%[^\n]", x)
-
+#define MOD 1000000007LL
 class FastInput {
 	public:
 		FastInput() {
@@ -58,19 +57,27 @@ class FastInput {
 		size_t m_dataOffset, m_dataSize;
 		uint32_t m_v;
 };
-int a[100000];
-int T, N, ans;
+ll a[100000];
+int T, N;
+ll ans;
 FastInput fi;
+ll pow2[100001];
 int main()
 {
+	pow2[0] = 1;
+	for(int i = 1; i <= 100000; i++)
+		pow2[i] = (pow2[i - 1] * 2LL) % MOD;
 	T = fi.ReadNext();
 	while(T--)
 	{
 		N = fi.ReadNext();
 		for(int i = 0; i < N; ++i)
 			a[i] = fi.ReadNext();
-		
-		printf("%d\n", ans);
+		sort(a, a + N);
+		ans = 0;
+		for(int i = 0; i < N; i++)
+			ans = (((ans + (a[i] * pow2[i]) % MOD) % MOD) + (MOD - (a[i] * pow2[N - i - 1]) % MOD)) % MOD;
+		printf("%lld\n", ans);
 	}
 	return 0;
 }
